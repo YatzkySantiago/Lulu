@@ -3,23 +3,41 @@ let iniciado = false;
 
 function calcularTiempo() {
     const ahora = new Date();
-    let diff = ahora - fechaInicio;
 
-    const segundos = Math.floor(diff / 1000);
-    const minutos = Math.floor(segundos / 60);
-    const horas = Math.floor(minutos / 60);
-    const dias = Math.floor(horas / 24);
-    const meses = Math.floor(dias / 30.44);
-    const años = Math.floor(meses / 12);
+    let years = ahora.getFullYear() - fechaInicio.getFullYear();
+    let months = ahora.getMonth() - fechaInicio.getMonth();
+    let days = ahora.getDate() - fechaInicio.getDate();
+    let hours = ahora.getHours() - fechaInicio.getHours();
+    let minutes = ahora.getMinutes() - fechaInicio.getMinutes();
+    let seconds = ahora.getSeconds() - fechaInicio.getSeconds();
 
-    return {
-        years: años,
-        months: meses % 12,
-        days: Math.floor(dias % 30.44),
-        hours: horas % 24,
-        minutes: minutos % 60,
-        seconds: segundos % 60
-    };
+    if (seconds < 0) {
+        seconds += 60;
+        minutes--;
+    }
+
+    if (minutes < 0) {
+        minutes += 60;
+        hours--;
+    }
+
+    if (hours < 0) {
+        hours += 24;
+        days--;
+    }
+
+    if (days < 0) {
+        const prevMonth = new Date(ahora.getFullYear(), ahora.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+    }
+
+    if (months < 0) {
+        months += 12;
+        years--;
+    }
+
+    return { years, months, days, hours, minutes, seconds };
 }
 
 function setTexto(id, valor, animar = false) {
